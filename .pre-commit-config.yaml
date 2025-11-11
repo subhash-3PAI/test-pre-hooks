@@ -1,0 +1,59 @@
+minimum_pre_commit_version: "3.5.0"
+
+default_language_version:
+  python: python3.11
+
+exclude: ^(.venv|\.venv|\.git|build|dist|node_modules|\.mypy_cache|\.ruff_cache)/
+
+repos:
+  # ---------------- Commit-time ----------------
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff (format)
+        language: system
+        entry: uvx ruff format
+        types: [python]
+        stages: [pre-commit]
+
+      - id: ruff-lint
+        name: ruff (lint)
+        language: system
+        entry: uvx ruff check
+        types: [python]
+        stages: [pre-commit]
+
+      # keep Black as a check while ruff formats
+      - id: black
+        name: black (check)
+        language: system
+        entry: uvx black --check
+        types: [python]
+        stages: [pre-commit]
+
+  # ---------------- Push-time ----------------
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        language: system
+        entry: uvx mypy
+        types: [python]
+        stages: [pre-push]
+
+      - id: bandit
+        name: bandit
+        language: system
+        entry: uvx bandit
+        args: ["-r"]
+        types: [python]
+        stages: [pre-push]
+
+      - id: detect-secrets
+        name: detect-secrets
+        language: system
+        entry: uvx --from detect-secrets detect-secrets-hook
+        args: ["--baseline", ".secrets.baseline"]
+        types: [text]
+        files: ^\.secrets\.baseline$
+        stages: [pre-push]

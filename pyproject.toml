@@ -1,0 +1,30 @@
+[project]
+name = "test-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "black>=25.11.0",
+    "mypy>=1.18.2",
+    "pre-commit>=4.4.0",
+    "ruff>=0.14.4",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-select = ["I"]  # import sort
+fix = true
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+pretty = true
